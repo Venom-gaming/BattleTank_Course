@@ -5,6 +5,7 @@
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Pawn.h"
 
+
 void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
