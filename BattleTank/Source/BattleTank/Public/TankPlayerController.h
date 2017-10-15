@@ -21,13 +21,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float CrosshairXLocation = 0.5;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float CrosshairYLocation = 0.3333;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	float LineTraceRange = 1000000;
 
 	//Start the tank moving the barrel so that a show would hit where the crosshair intersects with the world
