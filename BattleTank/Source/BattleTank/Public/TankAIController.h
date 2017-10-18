@@ -21,6 +21,7 @@ public:
 	
 private:
 	virtual void Tick(float DeltaTime) override;
+	float AccRadius = 3000.0f;
 
 
 };
