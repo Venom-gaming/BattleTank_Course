@@ -4,6 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
+#include "Projectile.h"
 
 
 // Sets default values for this component's properties
@@ -17,9 +18,15 @@ UTankAimingComponent::UTankAimingComponent()
 }
 
 
-void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
+void UTankAimingComponent::Initialize(UTankBarrel * BarrelToSet, UTankTurret * TurretToSet)
 {
-	if (!Barrel) { return; }
+	Barrel = BarrelToSet;
+	Turret = TurretToSet;
+}
+
+void UTankAimingComponent::AimAt(FVector HitLocation)
+{
+	if (!ensure(Barrel)) { return; }
 
 	FVector OutLaunchVelocity;
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
@@ -35,18 +42,9 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	
 }
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
-{
-	Barrel = BarrelToSet;
-}
-
-void UTankAimingComponent::SetTurretReference(UTankTurret * TurretToSet)
-{
-	Turret = TurretToSet;
-}
-
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
+	if (!ensure(Barrel && Turret)) { return; }
 	//Work-out difference between current and aimdirection
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator = AimDirection.Rotation();
@@ -57,4 +55,20 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 
 	Barrel->Elevate(DeltaRotator.Pitch);
 	Turret->Turn(DeltaRotator.Yaw);
+}
+
+void UTankAimingComponent::Fire()
+{
+	if (!ensure(Barrel && ProjectileBP)) { return; }
+	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime) > ReloadTimeInSeconds;
+
+	if (isReloaded)
+	{
+		//Spawn projectile at socket on barrel
+		auto Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBP, Barrel->GetSocketLocation(FName("Projectile")), Barrel->GetSocketRotation(FName("Projectile")));
+
+		Projectile->Launch(LaunchSpeed);
+
+		LastFireTime = FPlatformTime::Seconds();
+	}
 }
