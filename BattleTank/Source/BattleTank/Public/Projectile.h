@@ -7,7 +7,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Projectile.generated.h"
 
-
+class URadialForceComponent;
 
 
 UCLASS()
@@ -29,7 +29,15 @@ public:
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComponent, FVector NormalImpulse, const FHitResult & Hit);
 
+	void OnTimerExpire();
+
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float DestroyDelay = 5.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float ProjectileDamage = 20.0f;
+
 	UProjectileMovementComponent *ProjectileMovement = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Setup")
@@ -40,5 +48,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Setup")
 	UParticleSystemComponent *ImpactBlast = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Setup")
+	URadialForceComponent* ExplosionForce = nullptr;
 	
 };

@@ -20,7 +20,7 @@ public:
 	
 	//Max for per track, in Newtons
 	UPROPERTY(EditDefaultsOnly)
-	float TrackMaxDrivingForce = 40000000; //Assume 40 tonne tank and 1g acceleration
+	float TrackMaxDrivingForce = 60000000.0; //Assume 40 tonne tank and 1g acceleration
 
 private:
 	UTankTrack();
